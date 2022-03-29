@@ -1,0 +1,20 @@
+[
+    {
+        "name": "WL Raffle",
+        "image": "https://raw.githubusercontent.com/tomekregulski/magnum-token-logo/main/logo.png",
+        "description": "Enter for a chance to win an exclusive WL spot",
+        "price": 50,
+        "total_stock": 20,
+        "per_person": 2,
+        "deadline": 1649954133
+    },
+    {
+        "name": "Another WL Raffle",
+        "image": "https://raw.githubusercontent.com/tomekregulski/magnum-token-logo/main/logo.png",
+        "description": "Enter for a chance to win an exclusive WL spot",
+        "price": 100,
+        "total_stock": 35,
+        "per_person": 3,
+        "deadline": 1650558933
+    }
+]

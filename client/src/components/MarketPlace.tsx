@@ -1,6 +1,11 @@
 import React from 'react';
 
+import Product from './Product';
+
+import * as products from '../utils/products.json';
+
 const MarketPlace = () => {
+    console.log(products);
     return (
         <div style={{ textAlign: 'center' }}>
             <div>
@@ -15,10 +20,14 @@ const MarketPlace = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-around',
+                    flexWrap: 'wrap',
                     borderTop: '2px blue solid',
                 }}
             >
-                <div style={{ border: '2px blue solid', height: '500px', width: '300px' }}></div>
+                {products.length > 0 &&
+                    products.map((product, index) => {
+                        return <Product key={index} product={product} />;
+                    })}
             </section>
         </div>
     );
