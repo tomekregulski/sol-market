@@ -5,28 +5,38 @@ import Product from './Product';
 import * as products from '../utils/products.json';
 
 const MarketPlace = () => {
-    console.log(products);
+    // @ts-ignore
+    const purchase = (id, price) => {
+        console.log(id, price);
+        // TODO: validate that incoming price === product price on file
+        // product = products.filter where product.id === id
+
+        // TODO: validate that the user currently holds enough tokens to make the purchase
+
+        // TODO: send transaction
+
+        // TODO: POST record of successful purchase
+    };
+
     return (
         <div style={{ textAlign: 'center' }}>
-            <div>
+            <div style={{ width: '100vw', borderBottom: '2px blue solid', padding: '20px 0' }}>
                 <h1>Marketplace</h1>
                 <p>Check out the offerings below and make a purchase!</p>
             </div>
             <section
                 style={{
                     marginTop: '20px',
-                    paddingTop: '50px',
-                    width: '90vw',
+                    padding: '50px 20px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-around',
                     flexWrap: 'wrap',
-                    borderTop: '2px blue solid',
                 }}
             >
                 {products.length > 0 &&
                     products.map((product, index) => {
-                        return <Product key={index} product={product} />;
+                        return <Product key={index} product={product} callback={purchase} />;
                     })}
             </section>
         </div>

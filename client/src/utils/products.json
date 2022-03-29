@@ -1,5 +1,6 @@
 [
     {
+        "id": 0,
         "name": "WL Raffle",
         "image": "https://raw.githubusercontent.com/tomekregulski/magnum-token-logo/main/logo.png",
         "description": "Enter for a chance to win an exclusive WL spot",
@@ -9,6 +10,7 @@
         "deadline": 1649954133
     },
     {
+        "id": 1,
         "name": "Another WL Raffle",
         "image": "https://raw.githubusercontent.com/tomekregulski/magnum-token-logo/main/logo.png",
         "description": "Enter for a chance to win an exclusive WL spot",

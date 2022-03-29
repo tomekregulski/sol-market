@@ -2,8 +2,11 @@ import React from 'react';
 
 // @ts-ignore
 const Product = (props): FC => {
-    const { name, price, description, deadline, image, total_stock, per_person } = props.product;
-    const imgSrc = image;
+    const { id, name, price, description, deadline, image, total_stock, per_person } = props.product;
+
+    const purchaseHandler = () => {
+        props.callback(id, price);
+    };
 
     return (
         <>
@@ -32,7 +35,9 @@ const Product = (props): FC => {
                         <option value="1">1</option>
                         <option value="2">2</option>
                     </select>
-                    <button style={{ marginLeft: '30px' }}>Buy</button>
+                    <button style={{ marginLeft: '30px' }} onClick={purchaseHandler}>
+                        Buy
+                    </button>
                 </div>
             </div>
         </>

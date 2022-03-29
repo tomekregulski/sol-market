@@ -40,6 +40,8 @@ const WalletContainer: React.FC = () => {
     //     setSelectedStakingToken(ATA[0]);
     // };
 
+    // TODO: parse user tokens and set MAGAI tokens to state, display on screen.
+
     return (
         <>
             <div className="multi-wrapper">
