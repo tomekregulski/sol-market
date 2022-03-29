@@ -6,7 +6,12 @@ import axios from 'axios';
 
 import * as products from '../utils/products.json';
 
-const MarketPlace = () => {
+import { initialize } from '../utils/transactions';
+
+// @ts-ignore
+const MarketPlace = ({ program, provider }) => {
+    console.log(provider);
+    console.log(program);
     // @ts-ignore
     const purchase = async (id, price) => {
         console.log(id, price);
@@ -16,6 +21,7 @@ const MarketPlace = () => {
         // TODO: validate that the user currently holds enough tokens to make the purchase
 
         // TODO: send transaction
+        await initialize(provider, program);
 
         // TODO: POST record of successful purchase
         const formData = {

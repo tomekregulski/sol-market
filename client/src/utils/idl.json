@@ -1,0 +1,14 @@
+{
+    "version": "0.1.0",
+    "name": "cashier",
+    "instructions": [
+        {
+            "name": "initialize",
+            "accounts": [],
+            "args": []
+        }
+    ],
+    "metadata": {
+        "address": "GH6SLYoAS6D2Vq2UJGQ3bGDCLma9n2fi61X4VtgLozq7"
+    }
+}

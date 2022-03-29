@@ -3,10 +3,11 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import * as anchor from '@project-serum/anchor';
 
-// import { preflightCommitment, programID, getNft, connectionConfig } from '../utils/index';
+import { preflightCommitment, programID, connectionConfig } from '../utils/index';
 import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Program, Provider } from '@project-serum/anchor';
+import idl from '../utils/idl.json';
 
 import axios from 'axios';
 
@@ -20,25 +21,13 @@ const WalletContainer: React.FC = () => {
     const network = devnet;
 
     const wallet = useAnchorWallet();
-    // console.log(wallet);
+    console.log(wallet);
     // @ts-ignore
-    // const connection = new Connection(network, connectionConfig);
+    const connection = new Connection(network, connectionConfig);
     // @ts-ignore
-    // const provider = new Provider(connection, wallet, preflightCommitment);
+    const provider = new Provider(connection, wallet, preflightCommitment);
     // @ts-ignore
-    // const program = new Program(idl, programID, provider);
-
-    // @ts-ignore
-    // const findTokenAccounts = async (token) => {
-    //     const mint = new PublicKey(token);
-    //     const ATA = (
-    //         await provider.connection.getParsedTokenAccountsByOwner(program.provider.wallet.publicKey as PublicKey, {
-    //             mint: mint as PublicKey,
-    //         })
-    //     ).value;
-    //     console.log(ATA[0]);
-    //     setSelectedStakingToken(ATA[0]);
-    // };
+    const program = new Program(idl, programID, provider);
 
     // TODO: parse user tokens and set MAGAI tokens to state, display on screen.
 
@@ -68,7 +57,10 @@ const WalletContainer: React.FC = () => {
                                     alignItems: 'center',
                                 }}
                             >
-                                <MarketPlace />
+                                {
+                                    // @ts-ignore
+                                    <MarketPlace provider={provider} program={program} />
+                                }{' '}
                             </div>
                         ) : (
                             <p>Connect your wallet to begin</p>
