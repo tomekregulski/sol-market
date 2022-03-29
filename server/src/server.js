@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// app.use('/v1', require('./routes/v1/index'));
+app.use('/v1', require('./routes/v1/index'));
 
 const PORT = process.env.PORT || 5678;
 
