@@ -2,11 +2,13 @@ import React from 'react';
 
 import Product from './Product';
 
+import axios from 'axios';
+
 import * as products from '../utils/products.json';
 
 const MarketPlace = () => {
     // @ts-ignore
-    const purchase = (id, price) => {
+    const purchase = async (id, price) => {
         console.log(id, price);
         // TODO: validate that incoming price === product price on file
         // product = products.filter where product.id === id
@@ -16,6 +18,16 @@ const MarketPlace = () => {
         // TODO: send transaction
 
         // TODO: POST record of successful purchase
+        const formData = {
+            wallet: 'fake',
+            productId: '1',
+            quantity: '1',
+            totalPrice: '14',
+        };
+
+        const postData = await axios
+            .post(`http://localhost:5678/v1/tx`, formData)
+            .then((response) => console.log(response));
     };
 
     return (

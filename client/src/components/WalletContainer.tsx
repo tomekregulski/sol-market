@@ -42,6 +42,10 @@ const WalletContainer: React.FC = () => {
 
     // TODO: parse user tokens and set MAGAI tokens to state, display on screen.
 
+    useEffect(() => {
+        axios.get('http://localhost:5678/v1/tx').then((response) => console.log(response.data));
+    }, []);
+
     return (
         <>
             <div className="multi-wrapper">
