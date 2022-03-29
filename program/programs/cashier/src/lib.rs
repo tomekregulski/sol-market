@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("GH6SLYoAS6D2Vq2UJGQ3bGDCLma9n2fi61X4VtgLozq7");
 
 #[program]
 pub mod cashier {
