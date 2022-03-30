@@ -10,8 +10,6 @@ import { initialize } from '../utils/transactions';
 
 // @ts-ignore
 const MarketPlace = ({ program, provider }) => {
-    console.log(provider);
-    console.log(program);
     // @ts-ignore
     const purchase = async (id, price) => {
         console.log(id, price);

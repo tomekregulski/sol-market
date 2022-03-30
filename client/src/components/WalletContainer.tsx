@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
+
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { Program, Provider } from '@project-serum/anchor';
+
+// import { TokenContext } from '../context/tokens/token.context';
+// import useTokens from '../context/tokens/token.actions';
+
+import market_idl from '../utils/idl.json';
+
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import * as anchor from '@project-serum/anchor';
 
 import { preflightCommitment, programID, connectionConfig } from '../utils/index';
-import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
+
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Program, Provider } from '@project-serum/anchor';
-import idl from '../utils/idl.json';
+import { MAGAI_MINT_STRING } from '../context/tokens/token.constants';
 
 import axios from 'axios';
 
 import MarketPlace from './MarketPlace';
-
 import * as styles from '../styles/index';
 
 const WalletContainer: React.FC = () => {
@@ -27,9 +33,41 @@ const WalletContainer: React.FC = () => {
     // @ts-ignore
     const provider = new Provider(connection, wallet, preflightCommitment);
     // @ts-ignore
-    const program = new Program(idl, programID, provider);
+    const program = new Program(market_idl, programID, provider);
 
     // TODO: parse user tokens and set MAGAI tokens to state, display on screen.
+    // const {
+    //     state: { tokenAmount, staked, loading },
+    // } = useContext(TokenContext);
+
+    // const { checkUserMagaiBalance } = useTokens();
+
+    useEffect(() => {
+        const checkUserMagaiBalance = async () => {
+            if (wallet) {
+                try {
+                    let userMagai = 0;
+
+                    // get all token accounts from connected wallet
+                    const response = await connection.getParsedTokenAccountsByOwner(wallet.publicKey, {
+                        programId: TOKEN_PROGRAM_ID,
+                    });
+
+                    // @ts-ignore
+                    response.value.forEach((accountInfo) => {
+                        if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING) {
+                            userMagai = accountInfo.account.data['parsed']['info']['tokenAmount']['amount'];
+                        }
+                    });
+
+                    console.log(userMagai);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        };
+        checkUserMagaiBalance();
+    }, [wallet, connection]);
 
     useEffect(() => {
         axios.get('http://localhost:5678/v1/tx').then((response) => console.log(response.data));
