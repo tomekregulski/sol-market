@@ -17,26 +17,40 @@ const MarketPlace = ({ program, provider, balance }) => {
     }, []);
 
     // @ts-ignore
-    const purchase = async (id, price) => {
+    const purchase = async (id, price, quantity = 1) => {
         console.log(id, price);
-        // TODO: validate that incoming price === product price on file
-        // product = products.filter where product.id === id
-
-        // TODO: validate that the user currently holds enough tokens to make the purchase
-
+        // @ts-ignore
+        const product = products.filter((item) => item._id === id)[0];
+        // @ts-ignore
+        if (product.price !== price) {
+            alert('The price is not correct');
+        }
+        // @ts-ignore
+        if (product.price * quantity > balance) {
+            alert('You do not have enough MAGAI to make this purchase');
+        } else {
+            console.log('awesome, you can make the purchase');
+        }
         // TODO: send transaction
-        await initialize(provider, program);
+        const tx = await initialize(provider, program);
 
         // TODO: POST record of successful purchase
-        const formData = {
-            wallet: 'fake',
-            productId: '1',
-            quantity: '1',
-            totalPrice: '14',
+        const record = {
+            user_id: 1,
+            wallet: provider.wallet.publicKey.toString(),
+            product_id: id,
+            // @ts-ignore
+            // product_name: product.name,
+            quantity,
+            // price,
+            totalSpent: quantity * price,
+            txHash: tx,
         };
 
+        console.log(record);
+
         const postData = await axios
-            .post(`http://localhost:5678/v1/tx`, formData)
+            .post(`http://localhost:5678/v1/tx`, record)
             .then((response) => console.log(response));
     };
 

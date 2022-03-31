@@ -1,6 +1,7 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
 
-export const MAGAI_MINT_STRING = 'MAGf4MnUUkkAUUdiYbNFcDnE4EBGHJYLk9foJ2ae7BV';
+export const MAGAI_MINT_STRING_MAIN = 'MAGf4MnUUkkAUUdiYbNFcDnE4EBGHJYLk9foJ2ae7BV';
+export const MAGAI_MINT_STRING_DEV = '5wwzrurTXDNHDDrHw2PS78Ev38Hd9f7askUeVzDsnnQ7';
 
 // const rewardMintAuthority = [
 //     38, 160, 146, 62, 123, 196, 115, 195, 67, 100, 163, 195, 137, 72, 39, 153, 215, 6, 8, 141, 132, 130, 52, 229, 227,

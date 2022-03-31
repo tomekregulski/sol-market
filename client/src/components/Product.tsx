@@ -2,10 +2,10 @@ import React from 'react';
 
 // @ts-ignore
 const Product = (props): FC => {
-    const { id, name, price, description, deadline, image, total_stock, per_person } = props.product;
+    const { _id, name, price, description, deadline, image, total_stock, per_person } = props.product;
 
     const purchaseHandler = () => {
-        props.callback(id, price);
+        props.callback(_id, price);
     };
 
     return (

@@ -3,7 +3,7 @@ const TX = require('../../../models/v1/tx');
 module.exports = {
   all: async (req, res, next) => {
     try {
-      const data = await TX.find();
+      const data = await TX.find().populate('product');
 
       res.status(200).json(data);
     } catch (err) {

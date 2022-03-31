@@ -33,4 +33,5 @@ export const initialize = async (provider: Provider, program) => {
     console.log(transactionId);
 
     console.log('initialized successfully!');
+    return transactionId;
 };

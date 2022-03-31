@@ -14,7 +14,7 @@ import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-r
 import { preflightCommitment, programID, connectionConfig } from '../utils/index';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { MAGAI_MINT_STRING } from '../context/tokens/token.constants';
+import { MAGAI_MINT_STRING_MAIN, MAGAI_MINT_STRING_DEV } from '../context/tokens/token.constants';
 
 import axios from 'axios';
 
@@ -25,7 +25,7 @@ const WalletContainer: React.FC = () => {
     const [tokenAmount, setTokenAmount] = useState(0);
     const devnet = clusterApiUrl('devnet');
     const mainnet = clusterApiUrl('mainnet-beta');
-    const network = mainnet;
+    const network = devnet;
 
     const wallet = useAnchorWallet();
     console.log(wallet);
@@ -57,7 +57,7 @@ const WalletContainer: React.FC = () => {
                     // @ts-ignore
                     response.value.forEach((accountInfo) => {
                         // console.log(accountInfo.account.data['parsed']['info'].mint);
-                        if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING) {
+                        if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING_DEV) {
                             userMagai = accountInfo.account.data['parsed']['info']['tokenAmount']['amount'];
                         }
                     });
