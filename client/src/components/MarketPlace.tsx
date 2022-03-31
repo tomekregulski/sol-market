@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Product from './Product';
 
 import axios from 'axios';
 
-import * as products from '../utils/products.json';
-
 import { initialize } from '../utils/transactions';
 
+const apiRootUrl = 'http://localhost:5678';
+
 // @ts-ignore
-const MarketPlace = ({ program, provider }) => {
+const MarketPlace = ({ program, provider, balance }) => {
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        axios.get(`${apiRootUrl}/v1/products`).then((res) => setProducts(res.data));
+    }, []);
+
     // @ts-ignore
     const purchase = async (id, price) => {
         console.log(id, price);

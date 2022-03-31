@@ -22,9 +22,10 @@ import MarketPlace from './MarketPlace';
 import * as styles from '../styles/index';
 
 const WalletContainer: React.FC = () => {
+    const [tokenAmount, setTokenAmount] = useState(0);
     const devnet = clusterApiUrl('devnet');
-    // const mainnet = clusterApiUrl('mainnet-beta');
-    const network = devnet;
+    const mainnet = clusterApiUrl('mainnet-beta');
+    const network = mainnet;
 
     const wallet = useAnchorWallet();
     console.log(wallet);
@@ -55,12 +56,13 @@ const WalletContainer: React.FC = () => {
 
                     // @ts-ignore
                     response.value.forEach((accountInfo) => {
+                        // console.log(accountInfo.account.data['parsed']['info'].mint);
                         if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING) {
                             userMagai = accountInfo.account.data['parsed']['info']['tokenAmount']['amount'];
                         }
                     });
 
-                    console.log(userMagai);
+                    setTokenAmount(userMagai);
                 } catch (err) {
                     console.error(err);
                 }
@@ -81,11 +83,14 @@ const WalletContainer: React.FC = () => {
                         <div
                             style={{
                                 display: 'flex',
+                                flexDirection: 'column',
                                 justifyContent: 'center',
-                                marginTop: '80px',
+                                alignItems: 'flex-end',
+                                marginTop: '40px',
                             }}
                         >
                             <WalletMultiButton />
+                            <p>$MAGAI: {tokenAmount}</p>
                         </div>
                         {wallet ? (
                             <div
@@ -97,7 +102,7 @@ const WalletContainer: React.FC = () => {
                             >
                                 {
                                     // @ts-ignore
-                                    <MarketPlace provider={provider} program={program} />
+                                    <MarketPlace balance={tokenAmount} provider={provider} program={program} />
                                 }{' '}
                             </div>
                         ) : (

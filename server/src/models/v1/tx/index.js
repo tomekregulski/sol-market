@@ -4,8 +4,8 @@ const txSchema = new Schema(
   {
     wallet: String,
     productId: String,
-    quantity: String,
-    totalPrice: String,
+    quantity: Number,
+    totalSpent: Number,
   },
   { timestamps: true }
 );
