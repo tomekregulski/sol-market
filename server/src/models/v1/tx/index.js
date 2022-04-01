@@ -5,10 +5,9 @@ const txSchema = new Schema(
     wallet: String,
     user_id: Number,
     quantity: Number,
-    product_id: String,
     totalSpent: Number,
     txHash: String,
-    product: {
+    product_id: {
       type: Schema.Types.ObjectId,
       ref: 'product',
     },
@@ -16,6 +15,6 @@ const txSchema = new Schema(
   { timestamps: true }
 );
 
-const TX = model('tx', txSchema);
+const TX = model('marketTx', txSchema);
 
 module.exports = TX;

@@ -25,19 +25,20 @@ pub mod cashier {
 pub struct Initialize {}
 
 #[derive(Accounts)]
-#[instruction(amount: u64)]
 pub struct Purchase<'info> {
-    
-    #[account(signer)] 
     /// CHECK: this is safe because we have run client-side validation on the wallet initializing the transaction
+    #[account(signer)] 
     pub sender: AccountInfo<'info>,
     pub token_mint: Account<'info, Mint>, 
+    #[account(mut)]
     pub sender_magai_token_account: Account<'info, TokenAccount>,
+    #[account(mut)]
     pub magai_bank_token_account: Account<'info, TokenAccount>,
     /// CHECK: this is safe because the mint authority is stored in an environmental variable
-    pub magai_mint_authority: AccountInfo<'info>,
-    pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
+    // #[account(signer)] 
+    // pub magai_mint_authority: AccountInfo<'info>,
+    // pub system_program: Program<'info, System>,
+    // pub rent: Sysvar<'info, Rent>,
     pub token_program: Program<'info, Token>,
 }
 
@@ -49,7 +50,7 @@ impl<'info> Purchase<'info> {
             .to_account_info()
             .clone(),
             to: self.magai_bank_token_account.to_account_info().clone(),
-            authority: self.magai_mint_authority.clone(),
+            authority: self.sender.clone(),
         };
         CpiContext::new(self.token_program.to_account_info(), cpi_accounts)
     }

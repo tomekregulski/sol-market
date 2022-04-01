@@ -9,12 +9,6 @@ const productSchema = new Schema(
     total_stock: Number,
     per_person: Number,
     deadline: Number,
-    tx: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'tx',
-      },
-    ],
   },
   { timestamps: true }
 );
