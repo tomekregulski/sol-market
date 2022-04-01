@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import * as styles from '../styles/index';
 
 // @ts-ignore
 const Product = (props): FC => {
     const { _id, name, price, description, deadline, image, total_stock, per_person } = props.product;
 
+    const [quantity, setQuantity] = useState(0);
+
     const purchaseHandler = () => {
-        props.callback(_id, price);
+        if (quantity === 0) {
+            alert('You must select a quantity higher than 0');
+        }
+        props.callback(_id, price, quantity);
+    };
+
+    // @ts-ignore
+    const handleSelect = (e) => {
+        setQuantity(parseInt(e.target.value));
     };
 
     return (
@@ -29,16 +41,16 @@ const Product = (props): FC => {
                 <span>Available Until: {deadline}</span>
                 <span>Price: {price} $MAGAI</span>
                 <div>
-                    <span>Quantity: </span>
-                    <select style={{ marginRight: '30px', padding: '2px 15px' }} name="quantity">
+                    <span>Select Quantity: </span>
+                    <select onChange={(e) => handleSelect(e)} style={{ padding: '2px 15px' }} name="quantity">
                         <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                     </select>
-                    <button style={{ marginLeft: '30px' }} onClick={purchaseHandler}>
-                        Buy
-                    </button>
                 </div>
+                <button style={styles.btnStyle} onClick={purchaseHandler}>
+                    Buy
+                </button>
             </div>
         </>
     );

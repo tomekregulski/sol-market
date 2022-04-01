@@ -17,12 +17,13 @@ const MarketPlace = ({ program, provider, balance }) => {
     }, []);
 
     // @ts-ignore
-    const purchase = async (id, price, quantity = 1) => {
-        console.log(id, price);
+    const purchase = async (id, price, quantity) => {
+        console.log(id, price, quantity);
         // @ts-ignore
         const product = products.filter((item) => item._id === id)[0];
         // @ts-ignore
         const totalAmount = product.price * quantity;
+        console.log(totalAmount);
         // @ts-ignore
         if (product.price !== price) {
             alert('The price is not correct');
