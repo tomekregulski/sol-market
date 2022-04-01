@@ -25,11 +25,6 @@ describe('cashier', () => {
   const rewardMint = 'CoLyPNKkZvFhNMeh9BT3ELGj7dgk3MS234AWXPoFYemZ';
   const rewardMintPk = new PublicKey(rewardMint);
 
-  console.log('rewardMintPk');
-  console.log(rewardMintPk);
-  console.log('ownerWalletKeypair');
-  console.log(ownerWalletKeypair.publicKey.toString());
-
   it('Is initialized!', async () => {
     // Add your test here.
     const tx = await program.rpc.initialize({});
@@ -37,7 +32,7 @@ describe('cashier', () => {
   });
 
   it('Sends money', async () => {
-    console.log('attempting distribution...');
+    console.log('attempting to send payment...');
 
     let senderMagaiTokenAccount = (
       await provider.connection.getParsedTokenAccountsByOwner(
@@ -55,14 +50,6 @@ describe('cashier', () => {
     //   payerKeypair.publicKey // owner,
     // );
 
-    // let payerTokenAccount = (
-    //   await provider.connection.getParsedTokenAccountsByOwner(
-    //     payerKeypair.publicKey as PublicKey,
-    //     {
-    //       mint: rewardMintPk as PublicKey,
-    //     }
-    //   )
-    // ).value;
     let receiverTokenAccount = (
       await provider.connection.getParsedTokenAccountsByOwner(
         rewardMintAuthorityKeypair.publicKey as PublicKey,
@@ -72,19 +59,7 @@ describe('cashier', () => {
       )
     ).value;
 
-    console.log('retrievedRewardAta');
-    console.log(senderMagaiTokenAccount[0]);
-
-    console.log('mintAuthorityTokenAccount');
-    console.log(receiverTokenAccount[0]);
-
     const amount = new anchor.BN(10);
-    console.log('amount');
-    console.log(amount);
-
-    console.log('rewardMintAuthorityKeypair.publicKey');
-    console.log(rewardMintAuthorityKeypair.publicKey);
-    console.log(rewardMintAuthorityKeypair.publicKey.toString());
 
     const tx = await program.rpc.purchaseMarketplaceItem(amount, {
       accounts: {

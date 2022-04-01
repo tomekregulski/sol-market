@@ -4,7 +4,7 @@ import Product from './Product';
 
 import axios from 'axios';
 
-import { initialize } from '../utils/transactions';
+import { sendPayment } from '../utils/transactions';
 
 const apiRootUrl = 'http://localhost:5678';
 
@@ -22,36 +22,39 @@ const MarketPlace = ({ program, provider, balance }) => {
         // @ts-ignore
         const product = products.filter((item) => item._id === id)[0];
         // @ts-ignore
+        const totalAmount = product.price * quantity;
+        // @ts-ignore
         if (product.price !== price) {
             alert('The price is not correct');
         }
-        // @ts-ignore
-        if (product.price * quantity > balance) {
+
+        if (totalAmount > balance) {
             alert('You do not have enough MAGAI to make this purchase');
         } else {
             console.log('awesome, you can make the purchase');
         }
         // TODO: send transaction
-        const tx = await initialize(provider, program);
+        const tx = await sendPayment(program, totalAmount);
+        if (tx.message === 'success') {
+            // TODO: POST record of successful purchase
+            const record = {
+                user_id: 1,
+                wallet: provider.wallet.publicKey.toString(),
+                product_id: id,
+                // @ts-ignore
+                // product_name: product.name,
+                quantity,
+                // price,
+                totalSpent: totalAmount,
+                txHash: tx.payload,
+            };
 
-        // TODO: POST record of successful purchase
-        const record = {
-            user_id: 1,
-            wallet: provider.wallet.publicKey.toString(),
-            product_id: id,
-            // @ts-ignore
-            // product_name: product.name,
-            quantity,
-            // price,
-            totalSpent: quantity * price,
-            txHash: tx,
-        };
+            console.log(record);
 
-        console.log(record);
-
-        const postData = await axios
-            .post(`http://localhost:5678/v1/tx`, record)
-            .then((response) => console.log(response));
+            await axios.post(`http://localhost:5678/v1/tx`, record).then((res) => console.log(res.data));
+        } else {
+            console.log('transaction failed to send');
+        }
     };
 
     return (

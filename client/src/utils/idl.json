@@ -6,6 +6,42 @@
             "name": "initialize",
             "accounts": [],
             "args": []
+        },
+        {
+            "name": "purchaseMarketplaceItem",
+            "accounts": [
+                {
+                    "name": "sender",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "tokenMint",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "senderMagaiTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "magaiBankTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
         }
     ],
     "metadata": {
