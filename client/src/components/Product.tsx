@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import axios from 'axios';
 
 import * as styles from '../styles/index';
 
@@ -7,10 +9,36 @@ const Product = (props): FC => {
     const { _id, name, price, description, deadline, image, total_stock, per_person } = props.product;
 
     const [quantity, setQuantity] = useState(0);
+    const [purchased, setPurchased] = useState(0);
+
+    useEffect(() => {
+        // move to actions
+        const queryTx = async () => {
+            const data = await axios.get('http://localhost:5678/v1/tx');
+            let alreadyPurchased = 0;
+            // @ts-ignore
+            data.data.forEach((tx) => {
+                if (tx.product_id._id === _id) {
+                    console.log(tx.quantity);
+                    console.log(typeof tx.quantity);
+                    alreadyPurchased = alreadyPurchased + tx.quantity;
+                    console.log(alreadyPurchased);
+                }
+                console.log(alreadyPurchased);
+                setPurchased(alreadyPurchased);
+            });
+        };
+        queryTx();
+    }, [_id]);
 
     const purchaseHandler = () => {
         if (quantity === 0) {
             alert('You must select a quantity higher than 0');
+            return;
+        }
+        if (purchased === per_person) {
+            alert('You have already purchased the maximum amount');
+            return;
         }
         props.callback(_id, price, quantity);
     };
@@ -40,6 +68,8 @@ const Product = (props): FC => {
                 <span>{description}</span>
                 <span>Available Until: {deadline}</span>
                 <span>Price: {price} $MAGAI</span>
+                {purchased > 0 && <span>You already have: {purchased}</span>}
+                <span>Maximum per wallet: {per_person}</span>
                 <div>
                     <span>Select Quantity: </span>
                     <select onChange={(e) => handleSelect(e)} style={{ padding: '2px 15px' }} name="quantity">

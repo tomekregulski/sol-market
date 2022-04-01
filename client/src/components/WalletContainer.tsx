@@ -12,6 +12,7 @@ import market_idl from '../utils/idl.json';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 import { preflightCommitment, programID, connectionConfig } from '../utils/index';
+import { checkUserMagaiBalance } from '../utils/transactions';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { MAGAI_MINT_STRING_MAIN, MAGAI_MINT_STRING_DEV } from '../context/tokens/token.constants';
@@ -28,7 +29,6 @@ const WalletContainer: React.FC = () => {
     const network = devnet;
 
     const wallet = useAnchorWallet();
-    console.log(wallet);
     // @ts-ignore
     const connection = new Connection(network, connectionConfig);
     // @ts-ignore
@@ -44,36 +44,19 @@ const WalletContainer: React.FC = () => {
     // const { checkUserMagaiBalance } = useTokens();
 
     useEffect(() => {
-        const checkUserMagaiBalance = async () => {
+        const updateBalance = async () => {
             if (wallet) {
                 try {
-                    let userMagai = 0;
-
-                    // get all token accounts from connected wallet
-                    const response = await connection.getParsedTokenAccountsByOwner(wallet.publicKey, {
-                        programId: TOKEN_PROGRAM_ID,
-                    });
-
+                    const userMagai = await checkUserMagaiBalance(connection, wallet);
                     // @ts-ignore
-                    response.value.forEach((accountInfo) => {
-                        // console.log(accountInfo.account.data['parsed']['info'].mint);
-                        if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING_DEV) {
-                            userMagai = accountInfo.account.data['parsed']['info']['tokenAmount']['amount'];
-                        }
-                    });
-
                     setTokenAmount(userMagai);
-                } catch (err) {
-                    console.error(err);
+                } catch (e) {
+                    console.log(e);
                 }
             }
         };
-        checkUserMagaiBalance();
-    }, [wallet, connection]);
-
-    useEffect(() => {
-        axios.get('http://localhost:5678/v1/tx').then((response) => console.log(response.data));
-    }, []);
+        updateBalance();
+    });
 
     return (
         <>

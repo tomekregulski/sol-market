@@ -8,6 +8,32 @@ import { MAGAI_MINT_STRING_DEV } from '../context/tokens/token.constants';
 const mintPk = new PublicKey(MAGAI_MINT_STRING_DEV);
 
 // @ts-ignore
+export const checkUserMagaiBalance = async (connection, wallet) => {
+    try {
+        let userMagai = 0;
+
+        // get all token accounts from connected wallet
+        const response = await connection.getParsedTokenAccountsByOwner(wallet.publicKey, {
+            programId: TOKEN_PROGRAM_ID,
+        });
+
+        // @ts-ignore
+        response.value.forEach((accountInfo) => {
+            // console.log(accountInfo.account.data['parsed']['info'].mint);
+            if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING_DEV) {
+                userMagai = accountInfo.account.data['parsed']['info']['tokenAmount']['amount'];
+            }
+        });
+
+        console.log('balance refresh');
+        console.log(userMagai);
+        return userMagai;
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+// @ts-ignore
 export const initialize = async (provider: Provider, program) => {
     const sender = program.provider.wallet;
 

@@ -4,7 +4,7 @@ import Product from './Product';
 
 import axios from 'axios';
 
-import { sendPayment } from '../utils/transactions';
+import { sendPayment, checkUserMagaiBalance } from '../utils/transactions';
 
 const apiRootUrl = 'http://localhost:5678';
 
@@ -53,6 +53,15 @@ const MarketPlace = ({ program, provider, balance }) => {
             console.log(record);
 
             await axios.post(`http://localhost:5678/v1/tx`, record).then((res) => console.log(res.data));
+
+            // Bring up to context
+            try {
+                const userMagai = await checkUserMagaiBalance(program.provider.connection, program.provider.wallet);
+                // @ts-ignore
+                console.log(userMagai);
+            } catch (e) {
+                console.log(e);
+            }
         } else {
             console.log('transaction failed to send');
         }
