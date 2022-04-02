@@ -2,7 +2,7 @@ import React, { createContext, useReducer } from 'react';
 import tokenReducer from './token.reducer';
 import { TokenState } from './token.types';
 
-const INITIAL_STATE: TokenState = { tokenAmount: 0, staked: false, loading: false };
+const INITIAL_STATE: TokenState = { products: [], tokenAmount: 0, staked: false, loading: false };
 
 export const TokenContext = createContext<{
     state: TokenState;

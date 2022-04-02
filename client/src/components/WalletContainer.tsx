@@ -1,29 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
+import React, { useEffect, useContext } from 'react';
+import { clusterApiUrl, Connection } from '@solana/web3.js';
 
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { Program, Provider } from '@project-serum/anchor';
 
-// import { TokenContext } from '../context/tokens/token.context';
-// import useTokens from '../context/tokens/token.actions';
+import { TokenContext } from '../context/tokens/token.context';
+import useTokens from '../context/tokens/token.actions';
 
 import market_idl from '../utils/idl.json';
 
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-
 import { preflightCommitment, programID, connectionConfig } from '../utils/index';
-import { checkUserMagaiBalance } from '../utils/transactions';
-
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { MAGAI_MINT_STRING_MAIN, MAGAI_MINT_STRING_DEV } from '../context/tokens/token.constants';
-
-import axios from 'axios';
 
 import MarketPlace from './MarketPlace';
-import * as styles from '../styles/index';
 
 const WalletContainer: React.FC = () => {
-    const [tokenAmount, setTokenAmount] = useState(0);
+    // const [tokenAmount, setTokenAmount] = useState(0);
     const devnet = clusterApiUrl('devnet');
     const mainnet = clusterApiUrl('mainnet-beta');
     const network = devnet;
@@ -36,27 +28,29 @@ const WalletContainer: React.FC = () => {
     // @ts-ignore
     const program = new Program(market_idl, programID, provider);
 
-    // TODO: parse user tokens and set MAGAI tokens to state, display on screen.
-    // const {
-    //     state: { tokenAmount, staked, loading },
-    // } = useContext(TokenContext);
+    const {
+        state: { tokenAmount, staked, loading },
+    } = useContext(TokenContext);
 
-    // const { checkUserMagaiBalance } = useTokens();
+    // @ts-ignore
+    const { checkUserMagaiBalance } = useTokens();
 
     useEffect(() => {
         const updateBalance = async () => {
             if (wallet) {
                 try {
-                    const userMagai = await checkUserMagaiBalance(connection, wallet);
-                    // @ts-ignore
-                    setTokenAmount(userMagai);
+                    await checkUserMagaiBalance(provider);
                 } catch (e) {
                     console.log(e);
                 }
             }
         };
         updateBalance();
-    });
+    }, [wallet]);
+
+    useEffect(() => {
+        console.log(tokenAmount);
+    }, [tokenAmount]);
 
     return (
         <>

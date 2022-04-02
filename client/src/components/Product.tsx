@@ -8,7 +8,7 @@ import * as styles from '../styles/index';
 const Product = (props): FC => {
     const { _id, name, price, description, deadline, image, total_stock, per_person } = props.product;
 
-    const [quantity, setQuantity] = useState(0);
+    const [selectedQuantity, setSelectedQuantity] = useState(0);
     const [purchased, setPurchased] = useState(0);
 
     useEffect(() => {
@@ -19,12 +19,8 @@ const Product = (props): FC => {
             // @ts-ignore
             data.data.forEach((tx) => {
                 if (tx.product_id._id === _id) {
-                    console.log(tx.quantity);
-                    console.log(typeof tx.quantity);
                     alreadyPurchased = alreadyPurchased + tx.quantity;
-                    console.log(alreadyPurchased);
                 }
-                console.log(alreadyPurchased);
                 setPurchased(alreadyPurchased);
             });
         };
@@ -32,7 +28,7 @@ const Product = (props): FC => {
     }, [_id]);
 
     const purchaseHandler = () => {
-        if (quantity === 0) {
+        if (selectedQuantity === 0) {
             alert('You must select a quantity higher than 0');
             return;
         }
@@ -40,12 +36,12 @@ const Product = (props): FC => {
             alert('You have already purchased the maximum amount');
             return;
         }
-        props.callback(_id, price, quantity);
+        props.callback(_id, price, selectedQuantity);
     };
 
     // @ts-ignore
     const handleSelect = (e) => {
-        setQuantity(parseInt(e.target.value));
+        setSelectedQuantity(parseInt(e.target.value));
     };
 
     return (

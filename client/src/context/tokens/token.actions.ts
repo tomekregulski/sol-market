@@ -3,14 +3,25 @@ import { Provider, web3, utils, BN } from '@project-serum/anchor';
 import { PublicKey, Transaction } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
+import axios from 'axios';
+const apiRootUrl = 'http://localhost:5678';
+
 import { TokenContext } from './token.context';
-import { MAGAI_MINT_STRING } from './token.constants';
+import { MAGAI_MINT_STRING_DEV } from './token.constants';
 
 export default function useTokens() {
     const { state, dispatch } = useContext(TokenContext);
 
+    const fetchProducts = async () => {
+        console.log('fetch');
+        await axios
+            .get(`${apiRootUrl}/v1/products`)
+            .then((res) => dispatch({ type: 'UPDATE_PRODUCTS', payload: res.data }));
+    };
+
     // @ts-ignore
     const checkUserMagaiBalance = async (provider) => {
+        console.log('check balance');
         const { wallet, connection } = provider;
 
         try {
@@ -23,7 +34,7 @@ export default function useTokens() {
 
             // @ts-ignore
             response.value.forEach((accountInfo) => {
-                if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING) {
+                if (accountInfo.account.data['parsed']['info'].mint === MAGAI_MINT_STRING_DEV) {
                     userMagai = accountInfo.account.data['parsed']['info']['tokenAmount']['amount'];
                 }
             });
@@ -53,5 +64,11 @@ export default function useTokens() {
         if (currentlyStaking === true) {
             dispatch({ type: 'UPDATE_CURRENTLY_STAKING', payload: true });
         }
+    };
+
+    return {
+        checkUserMagaiBalance,
+        checkUserStakingStatus,
+        fetchProducts,
     };
 }

@@ -1,20 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+import useTokens from '../context/tokens/token.actions';
+import { TokenContext } from '../context/tokens/token.context';
 
 import Product from './Product';
 
 import axios from 'axios';
 
-import { sendPayment, checkUserMagaiBalance } from '../utils/transactions';
+import { sendPayment } from '../utils/transactions';
 
 const apiRootUrl = 'http://localhost:5678';
 
 // @ts-ignore
 const MarketPlace = ({ program, provider, balance }) => {
-    const [products, setProducts] = useState([]);
+    // const [products, setProducts] = useState([]);
+
+    const {
+        state: { products, tokenAmount, staked, loading },
+    } = useContext(TokenContext);
+
+    // @ts-ignore
+    const { checkUserMagaiBalance, fetchProducts } = useTokens();
 
     useEffect(() => {
-        axios.get(`${apiRootUrl}/v1/products`).then((res) => setProducts(res.data));
-    }, []);
+        if (products.length === 0) {
+            fetchProducts();
+        }
+    }, [fetchProducts, products]);
 
     // @ts-ignore
     const purchase = async (id, price, quantity) => {
@@ -34,7 +46,7 @@ const MarketPlace = ({ program, provider, balance }) => {
         } else {
             console.log('awesome, you can make the purchase');
         }
-        // TODO: send transaction
+
         const tx = await sendPayment(program, totalAmount);
         if (tx.message === 'success') {
             // TODO: POST record of successful purchase
@@ -42,23 +54,16 @@ const MarketPlace = ({ program, provider, balance }) => {
                 user_id: 1,
                 wallet: provider.wallet.publicKey.toString(),
                 product_id: id,
-                // @ts-ignore
-                // product_name: product.name,
                 quantity,
-                // price,
                 totalSpent: totalAmount,
                 txHash: tx.payload,
             };
 
-            console.log(record);
-
             await axios.post(`http://localhost:5678/v1/tx`, record).then((res) => console.log(res.data));
 
-            // Bring up to context
             try {
-                const userMagai = await checkUserMagaiBalance(program.provider.connection, program.provider.wallet);
-                // @ts-ignore
-                console.log(userMagai);
+                await checkUserMagaiBalance(provider);
+                await fetchProducts();
             } catch (e) {
                 console.log(e);
             }
