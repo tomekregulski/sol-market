@@ -7,7 +7,7 @@ import Product from './Product';
 
 import axios from 'axios';
 
-import { sendPayment } from '../utils/transactions';
+// import { sendPayment } from '../utils/transactions';
 
 const apiRootUrl = 'http://localhost:5678';
 
@@ -20,7 +20,7 @@ const MarketPlace = ({ program, provider, balance }) => {
     } = useContext(TokenContext);
 
     // @ts-ignore
-    const { checkUserMagaiBalance, fetchProducts } = useTokens();
+    const { checkUserMagaiBalance, fetchProducts, sendPayment } = useTokens();
 
     useEffect(() => {
         if (products.length === 0) {
