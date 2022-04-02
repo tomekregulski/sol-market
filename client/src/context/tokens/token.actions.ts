@@ -15,21 +15,24 @@ export default function useTokens() {
     const { state, dispatch } = useContext(TokenContext);
 
     const fetchProducts = async () => {
-        console.log('fetch');
-        await axios
-            .get(`${apiRootUrl}/v1/products`)
-            .then((res) => dispatch({ type: 'UPDATE_PRODUCTS', payload: res.data }));
+        await axios.get(`${apiRootUrl}/v1/products`).then((res) => {
+            dispatch({ type: 'UPDATE_PRODUCTS', payload: res.data });
+        });
+    };
+
+    const fetchUserTx = async (wallet: string) => {
+        await axios.get(`${apiRootUrl}/v1/tx/user/${wallet}`).then((res) => {
+            dispatch({ type: 'UPDATE_USER_PURCHASES', payload: res.data.userPurchases });
+        });
     };
 
     // @ts-ignore
     const checkUserMagaiBalance = async (provider) => {
-        console.log('check balance');
         const { wallet, connection } = provider;
 
         try {
             let userMagai = 0;
 
-            // get all token accounts from connected wallet
             const response = await connection.getParsedTokenAccountsByOwner(wallet.publicKey, {
                 programId: TOKEN_PROGRAM_ID,
             });
@@ -132,10 +135,24 @@ export default function useTokens() {
         }
     };
 
+    const updateProductInventory = async (previousInventory: number, quantityPurchased: number, id: string) => {
+        const newInventory = previousInventory - quantityPurchased;
+
+        await axios.put(`${apiRootUrl}/v1/products/${id}`, { remaining_stock: newInventory }).then((res) => {
+            //@ts-ignore
+            const products = state.products.filter((product) => product._id !== res.data._id);
+            //@ts-ignore
+            products.push(res.data);
+            dispatch({ type: 'UPDATE_PRODUCTS', payload: products });
+        });
+    };
+
     return {
         checkUserMagaiBalance,
         checkUserStakingStatus,
         fetchProducts,
         sendPayment,
+        updateProductInventory,
+        fetchUserTx,
     };
 }

@@ -2,10 +2,10 @@ const Product = require('../../../models/v1/product');
 
 module.exports = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const updated_stock = { remaining_stock: req.body.remaining_stock };
+    const filter = { _id: req.params };
+    const update = { remaining_stock: req.body.remaining_stock };
 
-    const product = await Product.findOneAndUpdate(id, updated_stock, {
+    const product = await Product.findOneAndUpdate(req.params, update, {
       returnOriginal: false,
     });
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import useTokens from '../context/tokens/token.actions';
 import { TokenContext } from '../context/tokens/token.context';
@@ -7,20 +7,16 @@ import Product from './Product';
 
 import axios from 'axios';
 
-// import { sendPayment } from '../utils/transactions';
-
-const apiRootUrl = 'http://localhost:5678';
-
 // @ts-ignore
 const MarketPlace = ({ program, provider, balance }) => {
     // const [products, setProducts] = useState([]);
 
     const {
-        state: { products, tokenAmount, staked, loading },
+        state: { purchases, products, tokenAmount, staked, loading },
     } = useContext(TokenContext);
 
     // @ts-ignore
-    const { checkUserMagaiBalance, fetchProducts, sendPayment } = useTokens();
+    const { checkUserMagaiBalance, fetchProducts, sendPayment, updateProductInventory, fetchUserTx } = useTokens();
 
     useEffect(() => {
         if (products.length === 0) {
@@ -28,8 +24,14 @@ const MarketPlace = ({ program, provider, balance }) => {
         }
     }, [fetchProducts, products]);
 
+    useEffect(() => {
+        if (Object.keys(purchases).length === 0 && provider.wallet) {
+            fetchUserTx(provider.wallet.publicKey.toString());
+        }
+    }, [provider.wallet, purchases.length]);
+
     // @ts-ignore
-    const purchase = async (id, price, quantity) => {
+    const purchase = async (id, price, quantity, remaining_stock) => {
         console.log(id, price, quantity);
         // @ts-ignore
         const product = products.filter((item) => item._id === id)[0];
@@ -60,6 +62,8 @@ const MarketPlace = ({ program, provider, balance }) => {
             };
 
             await axios.post(`http://localhost:5678/v1/tx`, record).then((res) => console.log(res.data));
+            updateProductInventory(remaining_stock, quantity, id);
+            fetchUserTx(provider.wallet.publicKey.toString());
 
             try {
                 await checkUserMagaiBalance(provider);

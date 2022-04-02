@@ -23,6 +23,11 @@ export default function tokenReducer(state: TokenState, { type, payload }) {
                 ...state,
                 loading: payload,
             };
+        case 'UPDATE_USER_PURCHASES':
+            return {
+                ...state,
+                purchases: payload,
+            };
         default:
             break;
     }
