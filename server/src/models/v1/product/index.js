@@ -9,6 +9,7 @@ const productSchema = new Schema(
     remaining_stock: Number,
     per_person: Number,
     deadline: Number,
+    active: Boolean,
   },
   { timestamps: true }
 );
