@@ -1,15 +1,16 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 
 import useTokens from '../context/tokens/token.actions';
 import { TokenContext } from '../context/tokens/token.context';
 
 import Product from './Product';
+import ProductInput from './ProductInput';
 
 import axios from 'axios';
 
 // @ts-ignore
 const MarketPlace = ({ program, provider, balance }) => {
-    // const [products, setProducts] = useState([]);
+    const [displayForm, setDisplayForm] = useState({ type: '', productInfo: {} });
 
     const {
         state: { purchases, products, tokenAmount, staked, loading },
@@ -29,6 +30,15 @@ const MarketPlace = ({ program, provider, balance }) => {
             fetchUserTx(provider.wallet.publicKey.toString());
         }
     }, [provider.wallet, purchases.length]);
+
+    const form = (displayType: string, id = '') => {
+        console.log(displayType);
+        console.log(id);
+        // @ts-ignore
+        const productInfo = products.filter((product) => product._id === id);
+        console.log(productInfo);
+        setDisplayForm({ type: displayType, productInfo: productInfo[0] });
+    };
 
     // @ts-ignore
     const purchase = async (id, price, quantity, remaining_stock) => {
@@ -82,6 +92,7 @@ const MarketPlace = ({ program, provider, balance }) => {
                 <h1>Marketplace</h1>
                 <p>Check out the offerings below and make a purchase!</p>
             </div>
+
             <section
                 style={{
                     marginTop: '20px',
@@ -94,8 +105,17 @@ const MarketPlace = ({ program, provider, balance }) => {
             >
                 {products.length > 0 &&
                     products.map((product, index) => {
-                        return <Product key={index} product={product} callback={purchase} />;
+                        return <Product key={index} product={product} callback={purchase} edit={form} />;
                     })}
+            </section>
+            <section>
+                <button onClick={() => form('add')}>Admin: Add a Product:</button>
+            </section>
+            <section>
+                {displayForm.type !== '' && (
+                    //@ts-ignore
+                    <ProductInput type={displayForm.type} productInfo={displayForm.productInfo} />
+                )}
             </section>
         </div>
     );

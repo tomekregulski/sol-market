@@ -62,6 +62,11 @@ const Product = (props): FC => {
         setSelectedQuantity(parseInt(e.target.value));
     };
 
+    // @ts-ignore
+    const handleEdit = (e) => {
+        props.edit('edit', _id);
+    };
+
     return (
         <>
             <div
@@ -96,6 +101,7 @@ const Product = (props): FC => {
                 <button style={styles.btnStyle} onClick={purchaseHandler}>
                     Buy
                 </button>
+                <button onClick={(e) => handleEdit(e)}>Admin: Edit</button>
             </div>
         </>
     );

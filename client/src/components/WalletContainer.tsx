@@ -15,7 +15,6 @@ import { preflightCommitment, programID, connectionConfig } from '../utils/index
 import MarketPlace from './MarketPlace';
 
 const WalletContainer: React.FC = () => {
-    // const [tokenAmount, setTokenAmount] = useState(0);
     const devnet = clusterApiUrl('devnet');
     const mainnet = clusterApiUrl('mainnet-beta');
     const network = devnet;

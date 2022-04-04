@@ -16,7 +16,9 @@ export default function useTokens() {
 
     const fetchProducts = async () => {
         await axios.get(`${apiRootUrl}/v1/products`).then((res) => {
-            dispatch({ type: 'UPDATE_PRODUCTS', payload: res.data });
+            // @ts-ignore
+            const data = res.data.filter((product) => product.active === true);
+            dispatch({ type: 'UPDATE_PRODUCTS', payload: data });
         });
     };
 
